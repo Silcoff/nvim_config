@@ -668,18 +668,41 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local ros_paths = vim.fn.systemlist 'python3 -c \'import sys; print("\\n".join(sys.path))\''
       local servers = {
         clangd = {},
         -- gopls = {},
         pyright = {
-          {
+          settings = {
             python = {
+              pythonPath = '/usr/bin/python3.10', -- Change this to your actual Python path
               analysis = {
+                extraPaths = ros_paths,
                 autoSearchPaths = true,
-                diagnosticMode = 'openFilesOnly',
                 useLibraryCodeForTypes = true,
+                diagnosticMode = 'workspace', -- Ensures it scans your entire workspace
+              },
+              workspace = {
+                library = {
+                  [vim.fn.expand '~/.local/lib/python3.10/site-packages'] = true,
+                },
               },
             },
+          },
+        },
+        basedpyright = {
+          python = {
+            pythonPath = '/usr/bin/python3.10',
+          },
+          analysis = {
+            extraPaths = {
+              '/home/carsten/.local/lib/python3.10/site-packages/',
+              '/opt/ros/humble/local/lib/python3.10/dist-packages/',
+            },
+            stubPath = '/home/carsten/.local/lib/python3.10/stubs/',
+            autoSearchPaths = true,
+            diagnosticMode = 'openFilesOnly',
+            useLibraryCodeForTypes = true,
           },
         },
         -- rust_analyzer = {},
