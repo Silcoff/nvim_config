@@ -682,27 +682,22 @@ require('lazy').setup({
                 useLibraryCodeForTypes = true,
                 diagnosticMode = 'workspace', -- Ensures it scans your entire workspace
               },
-              workspace = {
-                library = {
-                  [vim.fn.expand '~/.local/lib/python3.10/site-packages'] = true,
-                },
-              },
             },
           },
         },
         basedpyright = {
-          python = {
-            pythonPath = '/usr/bin/python3.10',
-          },
-          analysis = {
-            extraPaths = {
-              '/home/carsten/.local/lib/python3.10/site-packages/',
-              '/opt/ros/humble/local/lib/python3.10/dist-packages/',
+          settings = {
+            python = {
+              pythonPath = '/usr/bin/python3.10',
             },
-            stubPath = '/home/carsten/.local/lib/python3.10/stubs/',
-            autoSearchPaths = true,
-            diagnosticMode = 'openFilesOnly',
-            useLibraryCodeForTypes = true,
+            basedpyright = {
+              analysis = {
+                extraPaths = ros_paths,
+                autoSearchPaths = true,
+                diagnosticMode = 'workspace',
+                useLibraryCodeForTypes = true,
+              },
+            },
           },
         },
         -- rust_analyzer = {},
