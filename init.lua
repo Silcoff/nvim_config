@@ -675,27 +675,26 @@ require('lazy').setup({
         pyright = {
           settings = {
             python = {
-              pythonPath = '/usr/bin/python3.10', -- Change this to your actual Python path
+              filetypes = 'python',
               analysis = {
                 extraPaths = ros_paths,
                 autoSearchPaths = true,
                 useLibraryCodeForTypes = true,
-                diagnosticMode = 'workspace', -- Ensures it scans your entire workspace
+                diagnosticMode = 'openFilesOnly',
               },
             },
           },
         },
         basedpyright = {
           settings = {
-            python = {
-              pythonPath = '/usr/bin/python3.10',
-            },
+            filetypes = 'python',
             basedpyright = {
+              typeCheckingMode = 'standard',
               analysis = {
                 extraPaths = ros_paths,
                 autoSearchPaths = true,
-                diagnosticMode = 'workspace',
                 useLibraryCodeForTypes = true,
+                diagnosticMode = 'openFilesOnly',
               },
             },
           },
