@@ -678,7 +678,16 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local ros_paths = vim.fn.systemlist 'python3 -c \'import sys; print("\\n".join(sys.path))\''
       local servers = {
-        clangd = {},
+        clangd = {
+          cmd = {
+            "clangd",
+            "--background-index",           -- Index project code in the background
+            "--completion-style=detailed",  -- More detailed completion items
+            "--header-insertion=iwyu",      -- Include suggestions based on headers actually used
+            "--suggest-missing-includes",   -- Suggest includes for symbols
+            "--clang-tidy",                -- Enable clang-tidy diagnostics and fixes
+          },
+        },
         -- gopls = {},
         pyright = {
           settings = {
