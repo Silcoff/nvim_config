@@ -629,19 +629,6 @@ require('lazy').setup({
           },
         },
         -- gopls = {},
-        pyright = {
-          settings = {
-            python = {
-              filetypes = 'python',
-              analysis = {
-                extraPaths = ros_paths,
-                autoSearchPaths = true,
-                useLibraryCodeForTypes = true,
-                diagnosticMode = 'openFilesOnly',
-              },
-            },
-          },
-        },
         basedpyright = {
           settings = {
             filetypes = 'python',
