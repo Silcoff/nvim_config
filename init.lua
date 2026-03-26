@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -163,6 +163,12 @@ vim.o.scrolloff = 10
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.o.confirm = true
+
+-- Use spaces instead of tabs
+vim.o.expandtab = true -- Convert tabs to spaces
+vim.o.shiftwidth = 2 -- Indent by 2 spaces
+vim.o.tabstop = 2 -- A tab is displayed as 2 spaces
+vim.o.softtabstop = 2 -- Insert/delete 2 spaces when hitting <Tab>/<BS>
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -597,12 +603,43 @@ require('lazy').setup({
 
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
-      --  See `:help lsp-config` for information about keys and how to configure
-      ---@type table<string, vim.lsp.Config>
+      --
+      --  Add any additional override configuration in the following tables. Available keys are:
+      --  - cmd (table): Override the default command used to start the server
+      --  - filetypes (table): Override the default list of associated filetypes for the server
+      --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
+      --  - settings (table): Override the default settings passed when initializing the server.
+      --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local ros_paths = vim.fn.systemlist 'python3 -c \'import sys; print("\\n".join(sys.path))\''
+      local ros_distro = os.getenv 'ROS_DISTRO' or 'humble'
+      local ros_include = '/opt/ros/' .. ros_distro .. '/include'
       local servers = {
-        -- clangd = {},
+        clangd = {
+          cmd = {
+            'clangd',
+            '--background-index', -- Index project code in the background
+            '--completion-style=detailed', -- More detailed completion items
+            '--header-insertion=iwyu', -- Include suggestions based on headers actually used
+            '--suggest-missing-includes', -- Suggest includes for symbols
+            '--clang-tidy', -- Enable clang-tidy diagnostics and fixes
+            '-I' .. ros_include,
+          },
+        },
         -- gopls = {},
-        -- pyright = {},
+        basedpyright = {
+          settings = {
+            filetypes = 'python',
+            basedpyright = {
+              typeCheckingMode = 'standard',
+              analysis = {
+                extraPaths = ros_paths,
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = 'openFilesOnly',
+              },
+            },
+          },
+        },
         -- rust_analyzer = {},
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
