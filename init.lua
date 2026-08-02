@@ -171,6 +171,12 @@ do
   -- instead raise a dialog asking if you wish to save the current file(s)
   -- See `:help 'confirm'`
   vim.o.confirm = true
+
+  -- Use spaces instead of tabs
+  vim.o.expandtab = true -- Convert tabs to spaces
+  vim.o.shiftwidth = 2 -- Indent by 2 spaces
+  vim.o.tabstop = 2 -- A tab is displayed as 2 spaces
+  vim.o.softtabstop = 2 -- Insert/delete 2 spaces when hitting <Tab>/<BS>
 end
 
 -- ============================================================
