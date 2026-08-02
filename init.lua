@@ -697,8 +697,35 @@ do
   --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
   --  See `:help lsp-config` for information about keys and how to configure
   ---@type table<string, vim.lsp.Config>
+  local ros_paths = vim.fn.systemlist 'python3 -c \'import sys; print("\\n".join(sys.path))\''
+  local ros_distro = os.getenv 'ROS_DISTRO' or 'humble'
+  local ros_include = '/opt/ros/' .. ros_distro .. '/include'
   local servers = {
-    -- clangd = {},
+    clangd = {
+      cmd = {
+        'clangd',
+        '--background-index', -- Index project code in the background
+        '--completion-style=detailed', -- More detailed completion items
+        '--header-insertion=iwyu', -- Include suggestions based on headers actually used
+        '--suggest-missing-includes', -- Suggest includes for symbols
+        '--clang-tidy', -- Enable clang-tidy diagnostics and fixes
+        '-I' .. ros_include,
+      },
+    },
+    basedpyright = {
+      settings = {
+        filetypes = 'python',
+        basedpyright = {
+          typeCheckingMode = 'standard',
+          analysis = {
+            extraPaths = ros_paths,
+            autoSearchPaths = true,
+            useLibraryCodeForTypes = true,
+            diagnosticMode = 'openFilesOnly',
+          },
+        },
+      },
+    },
     -- gopls = {},
     -- pyright = {},
     -- rust_analyzer = {},
